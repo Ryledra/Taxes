@@ -29,9 +29,13 @@ public class TestCalculateTax {
 	
 	@Test
 	public void test()	{
-
 		Taxes tax = new Taxes();
+		
+		try	{
 		String fail = "Input " + input + " returns " + tax.calculatedTax(input) + " expected " + expected + "\n";
 		assertEquals(fail, expected, tax.calculatedTax(input));
+		} catch (SalaryLessThanZeroException slzx)	{
+			fail();
+		}
 	}
 }

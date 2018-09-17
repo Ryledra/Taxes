@@ -16,22 +16,39 @@ public class TestTaxBands {
 	@Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(
-				new Object[][] {{7500,0},{17000,10},{25000,15},{37000, 20},{50000,25}});
+				new Object[][] {{-300, "slzx"},{7500,0},{17000,10},{25000,15},{37000, 20},{50000,25}});
 	}
 	
 	private int input;
 	private int expected;
+	private String expectedEx;
 	
-	public TestTaxBands(int input, int expected)	{
+	
+	public TestTaxBands(int input, Object expected)	{
 		this.input = input;
-		this.expected = expected;
+		if (expected.getClass().toString().equals(Integer.class.toString()))
+			this.expected = (Integer)expected;
+		else {
+			this.expected = 0;
+			expectedEx = expected.toString();
+		}
 	}
 	
 	@Test
 	public void testTaxBand()	{
 		Taxes tax = new Taxes();
-		String fail = "Input " + input + " returns " + tax.taxBand(input) + " expected " + expected + "\n";
-		assertEquals(fail, expected, tax.taxBand(input));
+		
+		try	{
+			String fail = "Input " + input + " returns " + tax.taxBand(input) + " expected " + expected + "\n";
+			assertEquals(fail, expected, tax.taxBand(input));
+		}
+		catch (SalaryLessThanZeroException slzx)	{
+			boolean exExpected = false;
+			if (expectedEx == "slzx")	{
+				exExpected = true;
+			}
+			assertTrue("Exception not expected",exExpected);
+		}
 	}
 
 }
